@@ -1,0 +1,56 @@
+1616136887927	mozrunner::runner	INFO	Running command: "/Applications/Firefox.app/Contents/MacOS/firefox-bin" "-marionette" "-headless" "-foreground" "-no-remote" "-profile" "/var/folders/qp/62byk9gs7738gg2bzjf8p3br0000gn/T/rust_mozprofile7AtnGv"
+*** You are running in headless mode.
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new Error("", "(unknown module)"))
+1616136890947	Marionette	INFO	Listening on port 55178
+1616136891010	Marionette	WARN	TLS certificate errors will be ignored for this session
+1616136891026	Marionette	ERROR	[19] No reply from Marionette:Register
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new Error("", "(unknown module)"))
+console.log: WebExtensions: reset-default-search: No addons in our list are installed.
+1616143163566	mozrunner::runner	INFO	Running command: "/Applications/Firefox.app/Contents/MacOS/firefox-bin" "-marionette" "-headless" "-foreground" "-no-remote" "-profile" "/var/folders/qp/62byk9gs7738gg2bzjf8p3br0000gn/T/rust_mozprofileJTKqIH"
+*** You are running in headless mode.
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new Error("", "(unknown module)"))
+1616143165998	Marionette	INFO	Listening on port 56621
+1616143166069	Marionette	WARN	TLS certificate errors will be ignored for this session
+1616143166082	Marionette	ERROR	[19] No reply from Marionette:Register
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new Error("", "(unknown module)"))
+1616143169101	Marionette	INFO	Stopped listening on port 56621
+1616143205960	mozrunner::runner	INFO	Running command: "/Applications/Firefox.app/Contents/MacOS/firefox-bin" "-marionette" "-headless" "-foreground" "-no-remote" "-profile" "/var/folders/qp/62byk9gs7738gg2bzjf8p3br0000gn/T/rust_mozprofile23OcZU"
+*** You are running in headless mode.
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new Error("", "(unknown module)"))
+1616143208473	Marionette	INFO	Listening on port 56706
+1616143208560	Marionette	WARN	TLS certificate errors will be ignored for this session
+1616143208574	Marionette	ERROR	[19] No reply from Marionette:Register
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new Error("", "(unknown module)"))
+Exiting due to channel error.
+Exiting due to channel error.
+Exiting due to channel error.
+1616143797519	mozrunner::runner	INFO	Running command: "/Applications/Firefox.app/Contents/MacOS/firefox-bin" "-marionette" "-headless" "-foreground" "-no-remote" "-profile" "/var/folders/qp/62byk9gs7738gg2bzjf8p3br0000gn/T/rust_mozprofile2MrYbN"
+*** You are running in headless mode.
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new Error("", "(unknown module)"))
+1616143799830	Marionette	INFO	Listening on port 56921
+1616143799915	Marionette	WARN	TLS certificate errors will be ignored for this session
+1616143799926	Marionette	ERROR	[19] No reply from Marionette:Register
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new Error("", "(unknown module)"))
+console.log: WebExtensions: reset-default-search: No addons in our list are installed.
+Exiting due to channel error.
+Exiting due to channel error.
+Exiting due to channel error.
+1616156755269	mozrunner::runner	INFO	Running command: "/Applications/Firefox.app/Contents/MacOS/firefox-bin" "-marionette" "-headless" "-foreground" "-no-remote" "-profile" "/var/folders/qp/62byk9gs7738gg2bzjf8p3br0000gn/T/rust_mozprofileEYyLAD"
+*** You are running in headless mode.
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new Error("", "(unknown module)"))
+1616156757552	Marionette	INFO	Listening on port 59325
+1616156757666	Marionette	WARN	TLS certificate errors will be ignored for this session
+1616156757679	Marionette	ERROR	[19] No reply from Marionette:Register
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new Error("", "(unknown module)"))
+Exiting due to channel error.
+[GFX1-]: Receive IPC close with reason=AbnormalShutdown
+Exiting due to channel error.
+[GFX1-]: Receive IPC close with reason=AbnormalShutdown
+Exiting due to channel error.
+1616156970771	mozrunner::runner	INFO	Running command: "/Applications/Firefox.app/Contents/MacOS/firefox-bin" "-marionette" "-headless" "-foreground" "-no-remote" "-profile" "/var/folders/qp/62byk9gs7738gg2bzjf8p3br0000gn/T/rust_mozprofileruQXoz"
+*** You are running in headless mode.
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new Error("", "(unknown module)"))
+1616156972959	Marionette	INFO	Listening on port 59441
+1616156973062	Marionette	WARN	TLS certificate errors will be ignored for this session
+1616156973076	Marionette	ERROR	[19] No reply from Marionette:Register
+console.log: WebExtensions: reset-default-search: No addons in our list are installed.
