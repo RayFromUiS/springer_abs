@@ -20,6 +20,7 @@ NEWSPIDER_MODULE = 'abs_scraper.spiders'
 
 # Obey robots.txt rules
 # ROBOTSTXT_OBEY = True
+# DOWNLOAD_DELAY = 10
 RANDOMIZE_DOWNLOAD_DELAY = True
 SELENIUM_DRIVER_NAME = 'firefox'
 SELENIUM_DRIVER_EXECUTABLE_PATH = which('geckodriver')

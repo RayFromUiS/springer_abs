@@ -35,6 +35,6 @@ class AbsScraperPipeline:
 
     def process_item(self, item, spider):
 
-        if not self.db[self.collection_name].find_one({'url': item.get('url')}):
+        if not self.db[self.collection_name].find_one({'article_link': item.get('article_link')}):
             self.db[self.collection_name].insert_one(ItemAdapter(item).asdict())
         return item
