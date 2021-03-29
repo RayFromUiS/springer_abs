@@ -48,7 +48,7 @@ DOWNLOADER_MIDDLEWARES = {
     'scrapy.downloadermiddlewares.httpcompression.HttpCompressionMiddleware': 810,
 }
 
-MONGO_URI= 'mongodb://root:password@localhost:27017/'
+MONGO_URI= 'mongodb://root:jinzheng1706@localhost:27017/'
 MONGO_DATABASE='abstracts'
 
 # Configure a delay for requests for the same website (default: 0)
