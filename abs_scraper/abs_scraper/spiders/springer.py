@@ -1,7 +1,9 @@
 import scrapy
 import time
 from abs_scraper.items import  AbsScraperItem
-class SpringerSpider(scrapy.Spider):
+from scrapy_redis.spiders import RedisSpider
+
+class SpringerSpider(RedisSpider):
     name = 'springer'
     allowed_domains = ['springer.com']
     start_urls = ['https://link.springer.com/search?facet-content-type=%22Article%22&query=']
