@@ -39,11 +39,11 @@ class SpringerSpider(RedisSpider):
 
         time.sleep(30)
         next_page = response.css('a.next').attrib.get('href')
-        i = 0
-        while i<3:
-            if next_page:
-                yield response.follow(url=next_page,callback=self.parse_pages,cb_kwargs={'discipline':discipline})
-                i =i+1
+        # i = 0
+        # while i<3:
+        if next_page:
+            yield response.follow(url=next_page,callback=self.parse_pages,cb_kwargs={'discipline':discipline})
+                # i =i+1
             # from scrapy.shell import inspect_response
             # inspect_response(response,self)
     def parse(self,response,title,discipline,article_type):
