@@ -37,7 +37,7 @@ class SpringerSpider(RedisSpider):
                                              'discipline':discipline,
                                              'article_type':article_type})
 
-        time.sleep(10)
+        time.sleep(30)
         next_page = response.css('a.next').attrib.get('href')
         i = 0
         while i<3:
