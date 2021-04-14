@@ -13,11 +13,12 @@ import pymongo
 #         return item
 class AbsScraperPipeline:
 
-    collection_name = 'spr_abs'
+    # collection_name = 'spr_abs_physics'
 
     def __init__(self, mongo_uri, mongo_db):
         self.mongo_uri = mongo_uri
         self.mongo_db = mongo_db
+        self.collection_name= None
     #
     @classmethod
     def from_crawler(cls, crawler):
@@ -29,7 +30,7 @@ class AbsScraperPipeline:
     def open_spider(self, spider):
         self.client = pymongo.MongoClient(self.mongo_uri)
         self.db = self.client[self.mongo_db]
-
+        self.collection_name = spider.collection
     def close_spider(self, spider):
         self.client.close()
 

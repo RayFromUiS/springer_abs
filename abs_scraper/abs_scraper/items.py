@@ -29,3 +29,5 @@ class AbsScraperItem(scrapy.Item):
     pdf_links = scrapy.Field()
     journal_concat = scrapy.Field()
     backup = scrapy.Field()
+    page_number = scrapy.Field()
+

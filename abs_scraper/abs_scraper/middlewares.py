@@ -3,10 +3,20 @@
 # See documentation in:
 # https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
+from __future__ import absolute_import
+import os
+import os.path
+import logging
+import pickle
 from scrapy import signals
 
 # useful for handling different item types with a single interface
 from itemadapter import is_item, ItemAdapter
+
+from scrapy.http.cookies import CookieJar
+
+from scrapy.downloadermiddlewares.cookies import CookiesMiddleware
+from abs_scraper import settings
 
 
 class AbsScraperSpiderMiddleware:
@@ -101,3 +111,36 @@ class AbsScraperDownloaderMiddleware:
 
     def spider_opened(self, spider):
         spider.logger.info('Spider opened: %s' % spider.name)
+
+
+class PersistentCookiesMiddleware(CookiesMiddleware):
+    def __init__(self, debug=False):
+        super(PersistentCookiesMiddleware, self).__init__(debug)
+        self.load()
+
+    def process_response(self, request, response, spider):
+        # TODO: optimize so that we don't do it on every response
+        res = super(PersistentCookiesMiddleware, self).process_response(request, response, spider)
+        self.save()
+        return res
+
+    def getPersistenceFile(self):
+        return settings.COOKIES_STORAGE_FILE
+
+    def save(self):
+        logging.debug("Saving cookies to disk for reuse")
+        with open(self.getPersistenceFile(), "wb") as f:
+            pickle.dump(self.jars, f)
+            f.flush()
+
+    def load(self):
+        filename = self.getPersistenceFile()
+        logging.debug("Trying to load cookies from file '{0}'".format(filename))
+        if not os.path.exists(filename):
+            logging.info("File '{0}' for cookie reload doesn't exist".format(filename))
+            return
+        if not os.path.isfile(filename):
+            raise Exception("File '{0}' pis not a regular file".format(filename))
+
+        with open(filename, "rb") as f:
+            self.jars = pickle.load(f)

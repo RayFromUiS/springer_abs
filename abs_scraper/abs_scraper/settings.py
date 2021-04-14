@@ -43,12 +43,18 @@ DOWNLOADER_MIDDLEWARES = {
     'scrapy_selenium.SeleniumMiddleware': 750,
     # 'scrapy.downloadermiddlewares.cookies.CookiesMiddleware': None,
     # 'scrapy.downloadermiddlewares.cookies.PersistentCookiesMiddleware': 751,
-    'scrapy_splash.SplashCookiesMiddleware': 650,
-    'scrapy_splash.SplashMiddleware': 652,
+    'scrapy.downloadermiddlewares.cookies.CookiesMiddleware': None,
+    # 'scrapy_cookies.downloadermiddlewares.cookies.CookiesMiddleware': 700,
+    # 'abs_scraper.middlewares.cookies.PersistentCookiesMiddleware': 701,
+    # 'scrapy_splash.SplashCookiesMiddleware': 650,
+    # 'scrapy_splash.SplashMiddleware': 652,
     'scrapy.downloadermiddlewares.httpcompression.HttpCompressionMiddleware': 810,
 }
 
-MONGO_URI= 'mongodb://root:jinzheng1706@localhost:27017/'
+ITEM_PIPELINES = {
+   'abs_scraper.pipelines.AbsScraperPipeline': 300,
+}
+MONGO_URI= 'mongodb://root:jinzheng1706@139.198.191.224:27017/'
 MONGO_DATABASE='abstracts'
 
 # Configure a delay for requests for the same website (default: 0)
@@ -60,8 +66,10 @@ MONGO_DATABASE='abstracts'
 #CONCURRENT_REQUESTS_PER_IP = 16
 
 # Disable cookies (enabled by default)
-#COOKIES_ENABLED = False
-
+COOKIES_ENABLED = True
+COOKIES_PERSISTENCE = True
+COOKIES_PERSISTENCE_DIR = 'cookies'
+COOKIES_STORAGE = 'scrapy_cookies.storage.in_memory.InMemoryStorage'
 # Disable Telnet Console (enabled by default)
 #TELNETCONSOLE_ENABLED = False
 
@@ -79,9 +87,13 @@ MONGO_DATABASE='abstracts'
 
 # Enable or disable downloader middlewares
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
-#DOWNLOADER_MIDDLEWARES = {
+# DOWNLOADER_MIDDLEWARES = {
 #    'abs_scraper.middlewares.AbsScraperDownloaderMiddleware': 543,
-#}
+# }
+DOWNLOADER_MIDDLEWARES.update({
+    'scrapy.downloadermiddlewares.cookies.CookiesMiddleware': None,
+    'scrapy_cookies.downloadermiddlewares.cookies.CookiesMiddleware': 700,
+})
 
 # Enable or disable extensions
 # See https://docs.scrapy.org/en/latest/topics/extensions.html
@@ -91,16 +103,18 @@ MONGO_DATABASE='abstracts'
 
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
-ITEM_PIPELINES = {
-   'abs_scraper.pipelines.AbsScraperPipeline': 300,
-}
-SCHEDULER = "scrapy_redis.scheduler.Scheduler"
-SCHEDULER_PERSIST = True
-SCHEDULER_QUEUE_CLASS = 'scrapy_redis.queue.PriorityQueue'
-DUPEFILTER_CLASS = "scrapy_redis.dupefilter.RFPDupeFilter"
+# ITEM_PIPELINES = {
+#    'abs_scraper.pipelines.AbsScraperPipeline': 300,
+# }
+# SCHEDULER = "scrapy_redis.scheduler.Scheduler"
+# SCHEDULER_PERSIST = True
+# SCHEDULER_QUEUE_CLASS = 'scrapy_redis.queue.PriorityQueue'
+# STATS_CLASS = "scrapy_redis.stats.RedisStatsCollector"
+
+# DUPEFILTER_CLASS = "scrapy_redis.dupefilter.RFPDupeFilter"
 # Specify the host and port to use when connecting to Redis (optional).
-REDIS_HOST = 'localhost'
-REDIS_PORT = 6379
+# REDIS_HOST = 'localhost'
+# REDIS_PORT = 6379
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html
 #AUTOTHROTTLE_ENABLED = True
