@@ -1,0 +1,6 @@
+*.log
+*.log*
+/.ipynb_checkpoints/*
+*.ipynb
+/abs_scraper/crawls/*
+*.csv
