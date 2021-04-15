@@ -60,49 +60,53 @@ class SpringerSpider(scrapy.Spider):
         driver.set_page_load_timeout(180)
         if not re.search('Error', title_page) :  # no error page is shown
             # if page_number == 1:
-            driver.find_element_by_id('onetrust-accept-btn-handler').click()
-            ele = WebDriverWait(driver, 30).until(
-                        EC.invisibility_of_element((By.ID, "onetrust-policy")))
-            driver.find_element_by_link_text('Newest First').click()
-            time.sleep(10)
-            # ele = WebDriverWait(driver, 30).until(
-            #         EC.((By.XPATH, '//a[@class="next"]')))
-                ## after click or not proceed with following actions
-            articles = response.css('ol#results-list li')
-            for article in articles:
-                article_link = article.css('a').attrib.get('href')
-                title = article.css('a::text').get()
-                article_type = article.css('p.content-type::text').get().strip()
-                # if the article is not scraped
-                if not self.db[self.collection].find_one({'article_link': article_link}):
-                    results.append(article_link)
-                    yield response.follow(url=article_link,
-                                          callback=self.parse,
-                                          cb_kwargs={'title': title,
-                                                     'discipline': discipline,
-                                                     'article_type': article_type,
-                                                     'page_number':page_number})
+            try:
+                driver.find_element_by_id('onetrust-accept-btn-handler').click()
+                ele = WebDriverWait(driver, 30).until(
+                            EC.invisibility_of_element((By.ID, "onetrust-policy")))
+                driver.find_element_by_link_text('Newest First').click()
+                time.sleep(10)
+            except:
+                pass
+            finally:
+                # ele = WebDriverWait(driver, 30).until(
+                #         EC.((By.XPATH, '//a[@class="next"]')))
+                    ## after click or not proceed with following actions
+                articles = response.css('ol#results-list li')
+                for article in articles:
+                    article_link = article.css('a').attrib.get('href')
+                    title = article.css('a::text').get()
+                    article_type = article.css('p.content-type::text').get().strip()
+                    # if the article is not scraped
+                    if not self.db[self.collection].find_one({'article_link': article_link}):
+                        results.append(article_link)
+                        yield response.follow(url=article_link,
+                                              callback=self.parse,
+                                              cb_kwargs={'title': title,
+                                                         'discipline': discipline,
+                                                         'article_type': article_type,
+                                                         'page_number':page_number})
 
-                else: ## if the aritcle has been scraped
-                    results.append(None)
-            if len([result for result in results if result is not None]) == len(results):
-                # time.sleep(3)
-                num_pages = response.xpath('//span[@class="number-of-pages"]/text()').get()
-                if re.search(r',',num_pages):
-                    num_pages = int(num_pages.replace(',',''))
-                else:
-                    num_pages = int(num_pages)
-                for i in range(2,num_pages+1):
-                    page_url =f'https://link.springer.com/search/page/{i}?facet-content-type=%22Article%22&query=Earth+Sciences'
-                    yield SeleniumRequest(url=page_url,
-                                          callback=self.parse_links,
-                                          wait_time=30,
-                                          # wait_until=EC.presence_of_element_located(
-                                          #     (By.XPATH, '//a[@class="next"]')),
-                                          cb_kwargs={'discipline': discipline,
-                                                     'page_number':i
-                                                     }
-                                          )
+                    else: ## if the aritcle has been scraped
+                        results.append(None)
+                if len([result for result in results if result is not None]) == len(results):
+                    # time.sleep(3)
+                    num_pages = response.xpath('//span[@class="number-of-pages"]/text()').get()
+                    if re.search(r',',num_pages):
+                        num_pages = int(num_pages.replace(',',''))
+                    else:
+                        num_pages = int(num_pages)
+                    for i in range(2,num_pages+1):
+                        page_url =f'https://link.springer.com/search/page/{i}?facet-content-type=%22Article%22&query=Earth+Sciences'
+                        yield SeleniumRequest(url=page_url,
+                                              callback=self.parse_links,
+                                              wait_time=30,
+                                              # wait_until=EC.presence_of_element_located(
+                                              #     (By.XPATH, '//a[@class="next"]')),
+                                              cb_kwargs={'discipline': discipline,
+                                                         'page_number':i
+                                                         }
+                                              )
 
         elif re.search('Error', title_page):  ## error page is shown
             time.sleep(3)

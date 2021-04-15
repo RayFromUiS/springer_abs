@@ -6883,3 +6883,19 @@ JavaScript error: https://cdn.cookielaw.org/scripttemplates/6.12.0/otBannerSdk.j
 Exiting due to channel error.
 Exiting due to channel error.
 Exiting due to channel error.
+1618489412812	mozrunner::runner	INFO	Running command: "/Applications/Firefox.app/Contents/MacOS/firefox-bin" "-marionette" "-headless" "-foreground" "-no-remote" "-profile" "/var/folders/qp/62byk9gs7738gg2bzjf8p3br0000gn/T/rust_mozprofileSF8T3t"
+*** You are running in headless mode.
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new Error("", "(unknown module)"))
+1618489415210	Marionette	INFO	Listening on port 65446
+1618489415290	Marionette	WARN	TLS certificate errors will be ignored for this session
+1618489415312	Marionette	ERROR	[19] No reply from Marionette:Register
+JavaScript error: https://link.springer.com/static/061dd862ce64feb422137af036eec6a1c362792f/js/internal/mathJaxHooks.js?tet=ete, line 1: TypeError: MathJax.Hub is undefined
+JavaScript error: https://link.springer.com/static/061dd862ce64feb422137af036eec6a1c362792f/js/internal/mathJaxHooks.js?tet=ete, line 1: TypeError: MathJax.Hub is undefined
+JavaScript error: https://link.springer.com/static/061dd862ce64feb422137af036eec6a1c362792f/js/internal/mathJaxHooks.js?tet=ete, line 1: TypeError: MathJax.Hub is undefined
+[GFX1]: [Tiling:Client] Failed to allocate a TextureClient
+[GFX1]: [Tiling:Client] Failed to allocate a TextureClient
+Exiting due to channel error.
+[GFX1-]: Receive IPC close with reason=AbnormalShutdown
+Exiting due to channel error.
+[GFX1-]: Receive IPC close with reason=AbnormalShutdown
+Exiting due to channel error.
