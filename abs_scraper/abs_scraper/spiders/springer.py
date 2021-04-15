@@ -28,9 +28,10 @@ class SpringerSpider(scrapy.Spider):
         self.mongo_db = get_project_settings().get('MONGO_DATABASE')
         # self.collection
         # self.discipline = random.choice(self.disciplines)
-        # self.collection = 'spr_abs_'+ str(self.discipline)
-        self.discipline = 'Earth Sciences'
-        self.collection = 'spr_abs_' + self.discipline
+        # self.collection = 'spr_abs_'+ str(self.discipline)\
+        self.collection = None
+        # self.discipline = 'Earth Sciences'
+        # self.collection = 'spr_abs_' + self.discipline
         # self.discipline = s
         self.client = pymongo.MongoClient(self.mongo_uri)
         self.db = self.client[self.mongo_db]
@@ -38,15 +39,17 @@ class SpringerSpider(scrapy.Spider):
     def start_requests(self):
 
         for url in self.start_urls:
-            yield SeleniumRequest(url=url + self.discipline,
-                                  callback=self.parse_pages,
-                                  wait_time=60,
-                                  # wait_until=EC.presence_of_element_located((By.XPATH, '//a[@class="next"]')),
-                                  wait_until=EC.new_window_is_opened,
-                                  cb_kwargs={'discipline': self.discipline
-                                             ,'page_number':1
-                                             }
-                                  )
+            for discipline in self.disciplines:
+                self.collection = 'spr_abs'+str(discipline)
+                yield SeleniumRequest(url=url + str(discipline),
+                                      callback=self.parse_pages,
+                                      wait_time=60,
+                                      # wait_until=EC.presence_of_element_located((By.XPATH, '//a[@class="next"]')),
+                                      # wait_until=EC.new_window_is_opened,
+                                      cb_kwargs={'discipline': discipline
+                                                 ,'page_number':1
+                                                 }
+                                      )
 
     def parse_pages(self, response, discipline,page_number):
         # from scrapy.shell import inspect_response
@@ -172,7 +175,7 @@ class SpringerSpider(scrapy.Spider):
         # item['page_start'] = response.xpath("//span[@itemprop='pageStart']/text()").get()
         # item['page_end'] = response.xpath("//span[@itemprop='pageEnd']/text()").get()
         item['issue_year'] = response.xpath("//span[@data-test='article-publication-year']/text()").get().strip()
-        item['abstract'] = response.css('div#Abs1-content p::text').get()
+        item['abstract'] = response.xpath('//div[@id="Abs1-content"]/p//text()').getall()
         item['author_aff_address'] = response.css('p.c-article-author-affiliation__address::text').get()
         item['doi'] = response.xpath("//a[@itemprop='sameAs']").attrib.get('href')
         item['keywords'] = response.xpath("//span[@itemprop='about']/text()").getall()
