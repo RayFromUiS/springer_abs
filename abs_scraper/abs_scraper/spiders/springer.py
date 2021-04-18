@@ -2,6 +2,7 @@ import scrapy
 import time
 import re
 import random
+import json
 from abs_scraper.items import AbsScraperItem
 from scrapy_redis.spiders import RedisSpider
 from scrapy_selenium import SeleniumRequest
@@ -40,30 +41,30 @@ class SpringerSpider(scrapy.Spider):
 
         for url in self.start_urls:
             for discipline in self.disciplines:
-                self.collection = 'spr_abs'+str(discipline)
+                self.collection = 'spr_abs' + str(discipline)
                 yield SeleniumRequest(url=url + str(discipline),
                                       callback=self.parse_pages,
                                       wait_time=60,
                                       # wait_until=EC.presence_of_element_located((By.XPATH, '//a[@class="next"]')),
                                       # wait_until=EC.new_window_is_opened,
                                       cb_kwargs={'discipline': discipline
-                                                 ,'page_number':1
+                                          , 'page_number': 1
                                                  }
                                       )
 
-    def parse_pages(self, response, discipline,page_number):
+    def parse_pages(self, response, discipline, page_number):
         # from scrapy.shell import inspect_response
         # inspect_response(response,self)
         results = []
         title_page = response.css('title::text').get()
         driver = response.meta.get('driver')
         driver.set_page_load_timeout(180)
-        if not re.search('Error', title_page) :  # no error page is shown
+        if not re.search('Error', title_page):  # no error page is shown
             # if page_number == 1:
             try:
                 driver.find_element_by_id('onetrust-accept-btn-handler').click()
                 ele = WebDriverWait(driver, 30).until(
-                            EC.invisibility_of_element((By.ID, "onetrust-policy")))
+                    EC.invisibility_of_element((By.ID, "onetrust-policy")))
                 driver.find_element_by_link_text('Newest First').click()
                 time.sleep(10)
             except:
@@ -71,7 +72,7 @@ class SpringerSpider(scrapy.Spider):
             finally:
                 # ele = WebDriverWait(driver, 30).until(
                 #         EC.((By.XPATH, '//a[@class="next"]')))
-                    ## after click or not proceed with following actions
+                ## after click or not proceed with following actions
                 articles = response.css('ol#results-list li')
                 for article in articles:
                     article_link = article.css('a').attrib.get('href')
@@ -85,26 +86,26 @@ class SpringerSpider(scrapy.Spider):
                                               cb_kwargs={'title': title,
                                                          'discipline': discipline,
                                                          'article_type': article_type,
-                                                         'page_number':page_number})
+                                                         'page_number': page_number})
 
-                    else: ## if the aritcle has been scraped
+                    else:  ## if the aritcle has been scraped
                         results.append(None)
                 if len([result for result in results if result is not None]) == len(results):
                     # time.sleep(3)
                     num_pages = response.xpath('//span[@class="number-of-pages"]/text()').get()
-                    if re.search(r',',num_pages):
-                        num_pages = int(num_pages.replace(',',''))
+                    if re.search(r',', num_pages):
+                        num_pages = int(num_pages.replace(',', ''))
                     else:
                         num_pages = int(num_pages)
-                    for i in range(2,num_pages+1):
-                        page_url =f'https://link.springer.com/search/page/{i}?facet-content-type=%22Article%22&query=Earth+Sciences'
+                    for i in range(2, num_pages + 1):
+                        page_url = f'https://link.springer.com/search/page/{i}?facet-content-type=%22Article%22&query=Earth+Sciences'
                         yield SeleniumRequest(url=page_url,
                                               callback=self.parse_links,
                                               wait_time=30,
                                               # wait_until=EC.presence_of_element_located(
                                               #     (By.XPATH, '//a[@class="next"]')),
                                               cb_kwargs={'discipline': discipline,
-                                                         'page_number':i
+                                                         'page_number': i
                                                          }
                                               )
 
@@ -116,11 +117,11 @@ class SpringerSpider(scrapy.Spider):
                                   wait_time=60,
                                   # wait_until=EC.presence_of_element_located((By.XPATH, '//a[@class="next"]')),
                                   cb_kwargs={'discipline': discipline
-                                             ,'page_unumber':page_number
+                                      , 'page_unumber': page_number
                                              }
                                   )
 
-    def parse_links(self,response,discipline,page_number):
+    def parse_links(self, response, discipline, page_number):
 
         # results = []
         title_page = response.css('title::text').get()
@@ -154,9 +155,7 @@ class SpringerSpider(scrapy.Spider):
                                   )
         # if len([result for result in results if result is not None]) == len(results):
 
-
-
-    def parse(self, response, title, discipline, article_type,page_number):
+    def parse(self, response, title, discipline, article_type, page_number):
         # from scrapy.shell import inspect_response
         # inspect_response(response,self)
 
@@ -195,3 +194,6 @@ class SpringerSpider(scrapy.Spider):
         item['citation'] = ''.join(cite_pro)
         item['journal_concat'] = item['citation'].split('https:')[0].split('.')[-2].strip()
         yield item
+
+
+
