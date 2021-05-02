@@ -106,15 +106,18 @@ DOWNLOADER_MIDDLEWARES.update({
 # ITEM_PIPELINES = {
 #    'abs_scraper.pipelines.AbsScraperPipeline': 300,
 # }
-# SCHEDULER = "scrapy_redis.scheduler.Scheduler"
-# SCHEDULER_PERSIST = True
-# SCHEDULER_QUEUE_CLASS = 'scrapy_redis.queue.PriorityQueue'
+SCHEDULER = "scrapy_redis.scheduler.Scheduler"
+SCHEDULER_PERSIST = True
+SCHEDULER_QUEUE_CLASS = 'scrapy_redis.queue.PriorityQueue'
+# STATS_CLASS = "scrapy_redis.stats.RedisStatsCollector"
 # STATS_CLASS = "scrapy_redis.stats.RedisStatsCollector"
 
-# DUPEFILTER_CLASS = "scrapy_redis.dupefilter.RFPDupeFilter"
+# SCHEDULER_PERSIST = True
+DUPEFILTER_CLASS = "scrapy_redis.dupefilter.RFPDupeFilter"
 # Specify the host and port to use when connecting to Redis (optional).
-# REDIS_HOST = 'localhost'
-# REDIS_PORT = 6379
+REDIS_HOST = '139.198.191.224'
+# REDIS_HOST='localhost'
+REDIS_PORT = 6379
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html
 #AUTOTHROTTLE_ENABLED = True

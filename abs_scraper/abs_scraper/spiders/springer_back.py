@@ -12,17 +12,17 @@ from selenium.webdriver.support.ui import WebDriverWait
 
 from scrapy.utils.project import get_project_settings
 import pymongo
-from scrapy_redis.spiders import  RedisSpider
 
-class SpringerSpider(RedisSpider):
+
+class SpringerSpider(scrapy.Spider):
     name = 'springer'
     # allowed_domains = ['springer.com']
-    redis_key = "springer:start_urls"
-    # disciplines = ['Chemistry', 'Physics', 'Engineering', 'Materials Science',
-    #                'Mathematics', 'Earth Sciences', 'Environment', 'Social Sciences',
-    #                'Economics', 'Business and Management', 'Science, Humanities and Social Sciences, multidisciplinary',
-    #                'Linguistics', 'Energy', 'Political Science and International Relations',
-    #                'Geography', 'Finance', 'Materials', 'Earth Sciences & Geography', 'Environmental Sciences']
+    start_urls = ['https://link.springer.com/search?facet-content-type=%22Article%22&query=']
+    disciplines = ['Chemistry', 'Physics', 'Engineering', 'Materials Science',
+                   'Mathematics', 'Earth Sciences', 'Environment', 'Social Sciences',
+                   'Economics', 'Business and Management', 'Science, Humanities and Social Sciences, multidisciplinary',
+                   'Linguistics', 'Energy', 'Political Science and International Relations',
+                   'Geography', 'Finance', 'Materials', 'Earth Sciences & Geography', 'Environmental Sciences']
 
     def __init__(self):
         self.mongo_uri = get_project_settings().get('MONGO_URI')
@@ -30,41 +30,29 @@ class SpringerSpider(RedisSpider):
         # self.collection
         # self.discipline = random.choice(self.disciplines)
         # self.collection = 'spr_abs_'+ str(self.discipline)\
-        self.collection = 'Energy'
+        self.collection = None
         # self.discipline = 'Earth Sciences'
         # self.collection = 'spr_abs_' + self.discipline
         # self.discipline = s
         self.client = pymongo.MongoClient(self.mongo_uri)
         self.db = self.client[self.mongo_db]
 
-    # def start_requests(self):
+    def start_requests(self):
 
-        # for url in self.start_urls:
-        #     for discipline in self.disciplines:
-        #         self.collection = 'spr_abs' + str(discipline)
-        #         yield SeleniumRequest(url=url + str(discipline),
-        #                               callback=self.parse_pages,
-        #                               wait_time=60,
-        #                               # wait_until=EC.presence_of_element_located((By.XPATH, '//a[@class="next"]')),
-        #                               # wait_until=EC.new_window_is_opened,
-        #                               cb_kwargs={'discipline': discipline
-        #                                   , 'p
-    #                                   age_number': 1
-        #                                          }
-        #                               )
-
-    def make_requests_from_url(self, url):
-        return SeleniumRequest(url=url ,
-                                      # callback=self.parse_pages,
-                                      wait_time=30,
+        for url in self.start_urls:
+            for discipline in self.disciplines:
+                self.collection = 'spr_abs' + str(discipline)
+                yield SeleniumRequest(url=url + str(discipline),
+                                      callback=self.parse_pages,
+                                      wait_time=60,
                                       # wait_until=EC.presence_of_element_located((By.XPATH, '//a[@class="next"]')),
                                       # wait_until=EC.new_window_is_opened,
-                                      cb_kwargs={'discipline': self.collection
+                                      cb_kwargs={'discipline': discipline
                                           , 'page_number': 1
                                                  }
                                       )
 
-    def parse(self, response, discipline, page_number):
+    def parse_pages(self, response, discipline, page_number):
         # from scrapy.shell import inspect_response
         # inspect_response(response,self)
         results = []
@@ -94,7 +82,7 @@ class SpringerSpider(RedisSpider):
                     if not self.db[self.collection].find_one({'article_link': article_link}):
                         results.append(article_link)
                         yield response.follow(url=article_link,
-                                              callback=self.parse_item,
+                                              callback=self.parse,
                                               cb_kwargs={'title': title,
                                                          'discipline': discipline,
                                                          'article_type': article_type,
@@ -110,7 +98,7 @@ class SpringerSpider(RedisSpider):
                     else:
                         num_pages = int(num_pages)
                     for i in range(2, num_pages + 1):
-                        page_url = f'https://link.springer.com/search/page/{i}?facet-content-type=%22Article%22&query={discipline}'
+                        page_url = f'https://link.springer.com/search/page/{i}?facet-content-type=%22Article%22&query=Earth+Sciences'
                         yield SeleniumRequest(url=page_url,
                                               callback=self.parse_links,
                                               wait_time=30,
@@ -147,7 +135,7 @@ class SpringerSpider(RedisSpider):
                 if not self.db[self.collection].find_one({'article_link': article_link}):
                     # results.append(article_link)
                     yield response.follow(url=article_link,
-                                          callback=self.parse_item,
+                                          callback=self.parse,
                                           cb_kwargs={'title': title,
                                                      'discipline': discipline,
                                                      'article_type': article_type,
@@ -167,7 +155,7 @@ class SpringerSpider(RedisSpider):
                                   )
         # if len([result for result in results if result is not None]) == len(results):
 
-    def parse_item(self, response, title, discipline, article_type, page_number):
+    def parse(self, response, title, discipline, article_type, page_number):
         # from scrapy.shell import inspect_response
         # inspect_response(response,self)
 
