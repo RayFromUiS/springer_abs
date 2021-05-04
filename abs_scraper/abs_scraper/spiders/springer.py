@@ -30,28 +30,13 @@ class SpringerSpider(RedisSpider):
         # self.collection
         # self.discipline = random.choice(self.disciplines)
         # self.collection = 'spr_abs_'+ str(self.discipline)\
-        self.collection = 'Energy'
+        self.collection = 'Earth Sciences'
         # self.discipline = 'Earth Sciences'
         # self.collection = 'spr_abs_' + self.discipline
         # self.discipline = s
         self.client = pymongo.MongoClient(self.mongo_uri)
         self.db = self.client[self.mongo_db]
 
-    # def start_requests(self):
-
-        # for url in self.start_urls:
-        #     for discipline in self.disciplines:
-        #         self.collection = 'spr_abs' + str(discipline)
-        #         yield SeleniumRequest(url=url + str(discipline),
-        #                               callback=self.parse_pages,
-        #                               wait_time=60,
-        #                               # wait_until=EC.presence_of_element_located((By.XPATH, '//a[@class="next"]')),
-        #                               # wait_until=EC.new_window_is_opened,
-        #                               cb_kwargs={'discipline': discipline
-        #                                   , 'p
-    #                                   age_number': 1
-        #                                          }
-        #                               )
 
     def make_requests_from_url(self, url):
         return SeleniumRequest(url=url ,
