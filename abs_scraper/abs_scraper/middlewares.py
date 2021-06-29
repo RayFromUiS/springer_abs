@@ -9,7 +9,11 @@ import os.path
 import logging
 import pickle
 from scrapy import signals
+import re
+from selenium.webdriver.support.ui import WebDriverWait
+from scrapy.http import HtmlResponse
 
+import time
 # useful for handling different item types with a single interface
 from itemadapter import is_item, ItemAdapter
 
@@ -97,7 +101,35 @@ class AbsScraperDownloaderMiddleware:
         # - return a Response object
         # - return a Request object
         # - or raise IgnoreRequest
-        return response
+        reader = spider.reader
+        driver = response.meta.get('driver')
+        # print('the respponse url is ',response.url)
+        print('the current url of driver is ',driver.current_url)
+        driver.save_screenshot('window.png')
+        if re.search('crawlpre',response.url):
+            driver.maximize_window()
+            img_tag= driver.find_element_by_xpath('//div[@class="container"]/div/img')
+            img_tag.screenshot('test.png')
+            text = reader.readtext('test.png', detail=0)
+            text = ''.join(text)
+            time.sleep(4)
+            # driver.find_element_by_tag_name('input').click()
+            print('the verification code is ',text)
+            driver.find_element_by_tag_name('input').send_keys(str(text))
+            time.sleep(3)
+            driver.find_element_by_tag_name('button').screenshot('button.png')
+            driver.find_element_by_tag_name('button').click()
+            # el = WebDriverWait(driver,180).until(lambda d: d.find_element_by_id("Sidebar"))
+            # time.sleep(20)
+            print(driver.current_url)
+            url = driver.current_url
+            res = HtmlResponse(body=driver.page_source,url=url,encoding='utf8')
+            return res
+        elif not re.search('crawlpre', response.url) and not re.search('Not',response.css('title::text').get()):
+            return response
+        else:
+            return request
+
 
     def process_exception(self, request, exception, spider):
         # Called when a download handler or a process_request()
@@ -111,6 +143,8 @@ class AbsScraperDownloaderMiddleware:
 
     def spider_opened(self, spider):
         spider.logger.info('Spider opened: %s' % spider.name)
+
+
 
 
 class PersistentCookiesMiddleware(CookiesMiddleware):
