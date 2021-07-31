@@ -268,7 +268,18 @@ class OnePetroUpdatedSpider(scrapy.Spider):
     # start_urls = ['https://onepetro.org/search-results?sort=Date'
     #               '+-+Newest+First&fl_SiteID=1&rg_PublicationDate='
     #               '01%2f01%2f2020+TO+05%2f31%2f2021&page=3&f_ContentType=Proceedings+Papers']
-    start_urls = ['https://onepetro.org/search-results?sort=Date'
+    start_urls = [
+        # 'https://onepetro.org/search-results?q='
+        #           '&hd=advancedAny&rg_PublicationDate=01%2F01%2F2019%20TO%2012%2F31%2F2019&'
+        #           'fl_ContentType=Journal%20Articles&searchType=advanced',
+
+            'https://onepetro.org/search-results?sort=Date'
+        '+-+Newest+First&fl_SiteID=1&rg_PublicationDate='
+        '01%2f01%2f2016+TO+12%2f31%2f2018&&page=1&f_ContentType=Journal+Articles',
+                  'https://onepetro.org/search-results?sort=Date'
+                  '+-+Newest+First&fl_SiteID=1&rg_PublicationDate='
+                  '01%2f01%2f2019+TO+12%2f31%2f2019&&page=1&f_ContentType=Journal+Articles',
+                  'https://onepetro.org/search-results?sort=Date'
                   '+-+Newest+First&fl_SiteID=1&rg_PublicationDate='
                   '01%2f01%2f2020+TO+05%2f31%2f2021&page=1&f_ContentType=Journal+Articles']
     custom_settings = {
@@ -472,10 +483,20 @@ class OnePetroUpdatedSpider(scrapy.Spider):
             # next_page = response.css('div.pagination-bottom-outer-wrap a')[-1].attrib.get('data-url')
             #click cookie acceptance
     def parse_pages(self,response):
-        page_num = 1
+        page_num = 2
         while page_num<1000:
-            next_url=f"""https://onepetro.org/search-results?sort=Date+-+Newest+First&fl_SiteID=1&rg_" \
+
+            if re.search('2016',response.url) or re.search('2018',response.url):
+                next_url=f"""https://onepetro.org/search-results?sort=Date+-+Newest+First&fl_SiteID=1&rg_" \
+                     "PublicationDate=01%2f01%2f2016+TO+12%2f31%2f2018&page={page_num}&f_ContentType=Journal+Articles"""
+            elif re.search('2019',response.url):
+                next_url=f"""https://onepetro.org/search-results?sort=Date+-+Newest+First&fl_SiteID=1&rg_" \
+                     "PublicationDate=01%2f01%2f2019+TO+12%2f31%2f2019&page={page_num}&f_ContentType=Journal+Articles"""
+
+            else:
+                next_url=f"""https://onepetro.org/search-results?sort=Date+-+Newest+First&fl_SiteID=1&rg_" \
                      "PublicationDate=01%2f01%2f2020+TO+05%2f31%2f2021&page={page_num}&f_ContentType=Journal+Articles"""
+
             page_num += 1
             yield SeleniumRequest(url=next_url,
                               callback=self.parse_items_per_page,
